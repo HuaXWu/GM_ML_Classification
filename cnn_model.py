@@ -14,7 +14,7 @@ class CNNModel(nn.Module):
         super(CNNModel, self).__init__()
         self.conv1 = nn.Sequential(
             nn.Conv2d(
-                in_channels=1,
+                in_channels=3,
                 out_channels=64,
                 kernel_size=3,
                 stride=2,

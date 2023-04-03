@@ -101,10 +101,10 @@ def evaluate_classify(model, data_loader, device, epoch, val_num, save_path):
         images, labels = data
         sample_num += images.shape[0]
         pred = model(images.to(device))
-        probs = F.softmax(pred).detach().numpy()
+        probs = F.softmax(pred).detach().to("cpu").numpy()
         data = np.around(probs, 3)
-        pred_classes = torch.max(pred, dim=1)[1]
-        accu_num += torch.eq(pred_classes, labels.to(device)).sum()
+        pred_classes = torch.max(pred, dim=1)[1].to("cpu")
+        accu_num += torch.eq(pred_classes, labels.to("cpu")).sum()
         all_pred = all_pred + np.array(pred_classes).tolist()
         all_prob = all_prob + np.array(probs).tolist()
         loss = loss_function(pred, labels.to(device))
@@ -156,7 +156,7 @@ class MyDataSet(Dataset):
 
 
 def read_split_data(root: str, val_rate: float = 0.2):
-    random.seed(0)  # 保证随机结果可复现
+    random.seed(10)  # 保证随机结果可复现
     assert os.path.exists(root), "dataset root: {} does not exist.".format(root)
 
     flower_class = [cla for cla in os.listdir(root) if os.path.isdir(os.path.join(root, cla))]
@@ -195,7 +195,7 @@ def read_split_data(root: str, val_rate: float = 0.2):
     assert len(train_images_path) > 0, "number of training images must greater than 0."
     assert len(val_images_path) > 0, "number of validation images must greater than 0."
 
-    plot_image = True
+    plot_image = False
     if plot_image:
         plt.bar(range(len(flower_class)), every_class_num, align='center')
         plt.xticks(range(len(flower_class)), flower_class)

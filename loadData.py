@@ -13,10 +13,12 @@ import feather
 
 
 def read_split_data():
-    X = feather.read_dataframe("./origin_data/X.feather")
-    Y = feather.read_dataframe("./origin_data/label.feather")
-    Y = Y["label"]
-    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=23, stratify=Y)
+    X = feather.read_dataframe("./data/Hepatocirrhosis/X.feather")
+    Y = feather.read_dataframe("./data/Hepatocirrhosis/label.feather")
+    X = X.iloc[:, 0:-3]
+    Y = Y["0"]
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=9, stratify=Y)
+    print("X_train shape is {}, X_test shape is {}".format(X_train.shape, X_test.shape))
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
@@ -36,5 +38,5 @@ def read_split_data():
 
     # step 5 to dataloader
     train_loader = data.DataLoader(train_tensor, batch_size=16, shuffle=True, num_workers=8)
-    test_loader = data.DataLoader(test_tensor, batch_size=16, shuffle=False, num_workers=8)
-    return train_loader, test_loader
+    val_loader = data.DataLoader(test_tensor, batch_size=16, shuffle=False, num_workers=8)
+    return train_loader, val_loader
