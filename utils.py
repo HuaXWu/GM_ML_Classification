@@ -156,7 +156,7 @@ class MyDataSet(Dataset):
 
 
 def read_split_data(root: str, val_rate: float = 0.2):
-    random.seed(10)  # 保证随机结果可复现
+    random.seed(1)  # 保证随机结果可复现
     assert os.path.exists(root), "dataset root: {} does not exist.".format(root)
 
     flower_class = [cla for cla in os.listdir(root) if os.path.isdir(os.path.join(root, cla))]

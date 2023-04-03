@@ -18,7 +18,7 @@ save_path = "./model_path/CNN_T2D_.pth"
 """
     load image data
 """
-train_images_path, train_images_label, val_images_path, val_images_label = read_split_data(root="/root/autodl-tmp/origin_image/Hepatocirrhosis")
+train_images_path, train_images_label, val_images_path, val_images_label = read_split_data(root="/root/autodl-tmp/data/T2D/images")
 print(train_images_path)
 print(val_images_path)
 
@@ -29,13 +29,13 @@ data_transform = {
         #                                  transforms.RandomHorizontalFlip(),
         transforms.Resize(img_size),
         transforms.ToTensor(),
-        transforms.Normalize([0.052470338, 0.052470338, 0.052470338], [0.16041122, 0.16041122, 0.16041122])
+        transforms.Normalize([0.003162378, 0.003162378, 0.003162378], [0.032845695, 0.032845695, 0.032845695])
     ]),
     "val": transforms.Compose([
         #                                transforms.Resize(int(img_size * 1.143)),
         transforms.Resize(img_size),
         transforms.ToTensor(),
-        transforms.Normalize([0.047967374, 0.047967374, 0.047967374], [0.1504331, 0.1504331, 0.1504331])
+        transforms.Normalize([0.003279209, 0.003279209, 0.003279209], [0.030864006, 0.030864006, 0.030864006])
     ])}
 
 train_dataset = MyDataSet(images_path=train_images_path,
@@ -81,11 +81,11 @@ params = [p for p in net.parameters() if p.requires_grad]
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 net.to(device)
 optimizer = optim.SGD(params, lr=0.01)
-lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), 50,
+lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), 20,
                                    warmup=True, warmup_epochs=10)
 
 if __name__ == '__main__':
-    epochs = 50
+    epochs = 20
     all_train_acc = np.zeros(epochs)
     all_train_loss = np.zeros(epochs)
     all_lr = np.zeros(epochs)
